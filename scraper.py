@@ -86,7 +86,7 @@ def convert_mth_strings ( mth_string ):
 #### VARIABLES 1.0
 
 entity_id = "E2402_RCC_gov"
-url = "http://www.rutland.gov.uk/council_and_democracy/open_data_including_foi__dat/council_expenditure.aspx"
+url = "https://www.rutland.gov.uk/my-council/transparency/council-spending-information/"
 errors = 0
 data = []
 
