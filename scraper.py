@@ -99,23 +99,33 @@ soup = BeautifulSoup(html, "lxml")
 
 #### SCRAPE DATA
 
-links = soup.findAll('a')
+links = soup.find('div', 'clear column-body').find('ul').findAll('a')
 for link in links:
-        csvfile = ''
-        try:
-            csvfile = link['title'].strip()
-        except: pass
-        if 'CSV' in csvfile:
-            url = 'http://www.rutland.gov.uk' + link['href']
-            csvy = csvfile.split(' ')
-            csvYr = csvfile.split(' ')[1]
-            if 'December' in csvy[0] and len(csvy) == 3:
-                csvYr = '2013'
-            if 'Expenditure' in csvYr or 'CSV' in csvYr:
-                csvYr = '2014'
-            csvMth = csvy[0][:3]
-            csvMth = convert_mth_strings(csvMth.upper())
-            data.append([csvYr, csvMth, url])
+    csvfile = ''
+    try:
+        csvfile = link.text.strip()
+    except: pass
+    if '.csv' in link['title']:
+        url = 'http://www.rutland.gov.uk' + link['href']
+        csv_text = csvfile.split()
+        csvMth = 'Y1'
+        csvYr = '2016'
+        csvMth = convert_mth_strings(csvMth.upper())
+        data.append([csvYr, csvMth, url])
+archive_urls = soup.find('table', 'oDataGrid').find_all('a', attrs={'target':'_self'})
+for archive_url in archive_urls:
+    csvfile = ''
+    try:
+        csvfile = archive_url.text.strip()
+    except: pass
+    if '.csv' in archive_url['href']:
+        url = 'http://www.rutland.gov.uk' + archive_url['href']
+        csv_text = csvfile.split('/')
+        csvMth = 'Y1'
+        csvYr = csv_text[0].split()[-1]
+        csvMth = convert_mth_strings(csvMth.upper())
+        data.append([csvYr, csvMth, url])
+
 
 
 #### STORE DATA 1.0
@@ -137,4 +147,3 @@ if errors > 0:
 
 
 #### EOF
-
